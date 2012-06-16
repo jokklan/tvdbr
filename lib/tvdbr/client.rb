@@ -89,6 +89,19 @@ module Tvdbr
       return result["Episode"] if options[:raw]
       Episode.new(self, result["Episode"])
     end
+    
+    # Returns Episode data for a given episode id
+    # tvdb.find_episode_by_series_and_number(1234, 2, 5)
+    # tvdb.find_episode_by_series_and_number(1234, 2, 5, :raw => true)
+    def find_episode_by_series_and_number(series_id, season_num, episode_num, options={})
+      episode_url = "/series/#{series_id}"
+      episode_url << "/default/#{season_num}/#{episode_num}"
+      episode_url << "/en.xml"
+      result = self.get_with_key(episode_url)['Data']
+      return nil unless result && result['Episode']
+      return result["Episode"] if options[:raw]
+      Episode.new(self, result["Episode"])
+    end
 
     # Returns the list of TVDB mirror_urls
     # => ["http://thetvdb.com", ...]
